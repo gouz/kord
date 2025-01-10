@@ -14,7 +14,7 @@ It will implement some features:
 
 - weather
 - time
-- phone like with discord
+- phone calls with discord api
 - pomodoro
 - notifications for mail
 - ...
