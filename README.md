@@ -18,3 +18,6 @@ It will implement some features:
 - pomodoro
 - notifications for mail
 - ...
+
+This project must work with a Nabaztag/tag, and it will be modular.
+
