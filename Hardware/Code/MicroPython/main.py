@@ -1,21 +1,15 @@
-import neopix
 import wifi
 import screen
 import microsd
 
-lightPower = 32
-
 scr = screen.SCREEN()
 
 scr.log("SD read")
-microsd.MICROSD()
+sd = microsd.MICROSD()
 
-np = neopix.NEOPIX()
-np.setColor(4, lightPower, 0, 0)
+config = sd.getConfig()
 
 scr.log("WiFi connection")
 
-wifi.WIFI('bobox', 'mon joli mot de passe')
-np.setColor(4, 0, lightPower, 0)
-
+ip = wifi.WIFI(config["WIFI_SSID"], config["WIFI_PWD"])
 scr.log("connected")

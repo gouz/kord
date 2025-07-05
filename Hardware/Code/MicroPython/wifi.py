@@ -7,4 +7,3 @@ class WIFI:
         wlan.connect(login, password)
         while not wlan.isconnected():
             pass
-        print("connected")
