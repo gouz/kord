@@ -25,9 +25,9 @@ earLeft = servo.SERVO(pin=18)
 earRight = servo.SERVO(pin=22)
 
 while True:
-    earLeft.move_to_position(180, 200)
-    earRight.move_to_position(180, 200)
+    earLeft.set_angle(180)
+    earRight.set_angle(180)
     time.sleep_ms(2000)
-    earLeft.move_to_position(0, 200)
-    earRight.move_to_position(0, 200)
+    earLeft.set_angle(0)
+    earRight.set_angle(0)
     time.sleep_ms(1000)
