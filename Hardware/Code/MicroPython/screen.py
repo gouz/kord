@@ -1,5 +1,6 @@
 from machine import Pin, I2C
 import ssd1306
+import framebuf
 
 class SCREEN:
     def __init__(self):
