@@ -6,11 +6,11 @@ import _thread
 
 
 class NEOPIX:
-    def __init__(self, lightPower):
+    def __init__(self, pin, lightPower):
         self.animation = False
         self.lightPower = lightPower
         self.nbPixels = 3
-        self.np = neopixel.NeoPixel(Pin(20), self.nbPixels)
+        self.np = neopixel.NeoPixel(Pin(pin, mode=Pin.OUT), self.nbPixels)
         for i in range(self.nbPixels):
             self.np[i] = (0, 0, 0)
         self.np.write()
