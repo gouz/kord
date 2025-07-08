@@ -2,7 +2,7 @@ import urequests as requests
 
 class WEATHER:
     def __init__(self, latitude, longitude):
-        self.urlWeather = f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,weather_code"
+        self.urlWeather = f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code"
 
     def getWeatherData(self) -> dict:
         weather = requests.get(self.urlWeather)
@@ -22,7 +22,10 @@ class WEATHER:
         i = 0
         while (weather_data[i]["time"] != current):
            i += 1
-        return weather_data[i + 6]
+        return {
+            "next": weather_data[i + 1],
+            "current": weather.json()["current"]
+        }
     
     def getWeatherTypeFromCode(self, code):
         if (code >= 90):
