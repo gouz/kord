@@ -2,7 +2,7 @@ import urequests as requests
 
 class WEATHER:
     def __init__(self, latitude, longitude):
-        self.urlWeather = f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code"
+        self.urlWeather = f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&timezone=auto&forecast_days=2"
 
     def getWeatherData(self) -> dict:
         weather = requests.get(self.urlWeather)
