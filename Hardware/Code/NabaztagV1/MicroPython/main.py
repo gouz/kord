@@ -6,6 +6,9 @@ import servo
 import screen
 import taichi
 import button
+import icons
+
+ics = icons.ICONS()
 
 earLeft = servo.SERVO(pin=18)
 earRight = servo.SERVO(pin=22)
@@ -66,8 +69,8 @@ while True:
             meteo_data = meteo.getWeatherData()
             np.setWeather(meteo.getWeatherTypeFromCode(meteo_data["next"]["weather_code"]))
             scr.cls()
-            scr.text(f"Temp: {meteo_data["current"]["temperature_2m"]}C", 0, 0)
-            scr.text(f"Type: {meteo.getWeatherTypeFromCode(meteo_data["current"]["weather_code"])}", 0, 20)
+            scr.img(ics.img(meteo.getWeatherTypeFromCode(meteo_data["current"]["weather_code"])), 0, 0)
+            scr.text(f"{meteo_data["current"]["temperature_2m"]}C", 70, 28)
             scr.disp()
         cptRefresh = cptRefresh + 1
     elif mode == "taichi":

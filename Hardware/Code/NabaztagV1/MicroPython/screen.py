@@ -21,3 +21,11 @@ class SCREEN:
         self.cls()
         self.text(str, 0, 0)
         self.disp()
+
+    def img(self, imagebuffer, left, top):
+        fb = framebuf.FrameBuffer(bytearray(imagebuffer), 64, 64, framebuf.MONO_HLSB)
+        for y in range(64):
+            for x in range(64):
+                pixel = fb.pixel(x, y)
+                self.oled.pixel(left + x, top + y, pixel)
+        self.oled.show()
