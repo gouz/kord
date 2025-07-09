@@ -4,14 +4,23 @@ import weather
 import time
 import servo
 import screen
+import taichi
+import button
 
-scr = screen.SCREEN()
+earLeft = servo.SERVO(pin=18)
+earRight = servo.SERVO(pin=22)
+
+scr = screen.SCREEN(sda=16, scl=17)
+
+myButton = button.BUTTON(pin=14)
 
 lightPower = 16
 np = neopix.NEOPIX(pin=20, lightPower=lightPower)
 np.setColor(0, lightPower, 0, 0)
 np.setColor(1, lightPower, 0, 0)
 np.setColor(2, lightPower, 0, 0)
+
+tai = taichi.TAICHI(np, earLeft, earRight, lightPower)
 
 scr.log("WiFi connection")
 wf = wifi.WIFI("bobox", "mon joli mot de passe")
@@ -31,31 +40,39 @@ while not wf.isconnected():
         scr.log("connection failed")
     time.sleep(1)
 
+scr.log("connected")
+
 np.setColor(0, 0, lightPower, 0)
 np.setColor(1, 0, lightPower, 0)
 np.setColor(2, 0, lightPower, 0)
 
 meteo = weather.WEATHER(latitude=45.7334, longitude=4.2275)
 
-earLeft = servo.SERVO(pin=18)
-earRight = servo.SERVO(pin=22)
+mode = "weather"
+
+cptRefresh = 0
 
 while True:
-    earLeft.forward(0.5)
-    earRight.forward(0.5)
-    time.sleep_ms(500)
-    earLeft.stop()
-    earLeft.backward(0.5)
-    earRight.backward(0.5)
-    time.sleep_ms(500)
-    earLeft.stop()
-    earRight.stop()
-
-    meteo_data = meteo.getWeatherData()
-    np.setWeather(meteo.getWeatherTypeFromCode(meteo_data["next"]["weather_code"]))
-    scr.cls()
-    scr.text(f"Temp: {meteo_data["current"]["temperature_2m"]}C", 0, 0)
-    scr.text(f"Type: {meteo.getWeatherTypeFromCode(meteo_data["current"]["weather_code"])}", 0, 20)
-    scr.disp()
-    time.sleep(300)
-    print("coucou")
+    if myButton.isPressed():
+        if mode == "weather": mode = "taichi"
+        else: mode = "weather"
+    
+    if mode == "weather":
+        tai.stop()
+        if cptRefresh == 300 or cptRefresh == 0:
+            cptRefresh = 0
+            scr.cls()
+            scr.log("get weather")
+            meteo_data = meteo.getWeatherData()
+            np.setWeather(meteo.getWeatherTypeFromCode(meteo_data["next"]["weather_code"]))
+            scr.cls()
+            scr.text(f"Temp: {meteo_data["current"]["temperature_2m"]}C", 0, 0)
+            scr.text(f"Type: {meteo.getWeatherTypeFromCode(meteo_data["current"]["weather_code"])}", 0, 20)
+            scr.disp()
+        cptRefresh = cptRefresh + 1
+    elif mode == "taichi":
+        cptRefresh = 0
+        scr.cls()
+        scr.log(mode)
+        tai.go()
+    time.sleep(1)

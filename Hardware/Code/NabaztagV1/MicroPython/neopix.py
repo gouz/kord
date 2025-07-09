@@ -4,7 +4,6 @@ import random
 import time
 import _thread
 
-
 class NEOPIX:
     def __init__(self, pin, lightPower):
         self.animation = False

@@ -3,8 +3,8 @@ import ssd1306
 import framebuf
 
 class SCREEN:
-    def __init__(self):
-        i2c = I2C(0, sda=Pin(16), scl=Pin(17)) 
+    def __init__(self, sda, scl):
+        i2c = I2C(0, sda=Pin(sda), scl=Pin(scl)) 
         self.oled = ssd1306.SSD1306_I2C(128, 64, i2c)
 
     def text(self, str, x = 0, y = 0):
