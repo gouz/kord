@@ -57,7 +57,10 @@ cptRefresh = 0
 
 while True:
     if myButton.isPressed():
-        if mode == "weather": mode = "taichi"
+        if mode == "weather": 
+            mode = "taichi"
+            scr.cls()
+            scr.log(mode)
         else: mode = "weather"
     
     if mode == "weather":
@@ -75,7 +78,5 @@ while True:
         cptRefresh = cptRefresh + 1
     elif mode == "taichi":
         cptRefresh = 0
-        scr.cls()
-        scr.log(mode)
         tai.go()
     time.sleep(1)
