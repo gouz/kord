@@ -17,7 +17,7 @@ scr = screen.SCREEN(sda=16, scl=17)
 
 myButton = button.BUTTON(pin=14)
 
-lightPower = 16
+lightPower = 64
 np = neopix.NEOPIX(pin=20, lightPower=lightPower)
 np.setColor(0, lightPower, 0, 0)
 np.setColor(1, lightPower, 0, 0)
@@ -34,13 +34,13 @@ while not wf.isconnected():
     if (wf.status() == 0):
         scr.log("wifi not enabled")
     elif (wf.status() == 1):
-        scr.log("currently scanning")
+        scr.log("scanning")
     elif (wf.status() == 2):
-        scr.log("connecting to a network")
+        scr.log("connecting")
     if (wf.status() == 3):
-        scr.log("connected to a network")
+        scr.log("connected")
     elif (wf.status() == 4):
-        scr.log("connection failed")
+        scr.log("failed")
     time.sleep(1)
 
 scr.log("connected")
@@ -61,6 +61,7 @@ while True:
             mode = "taichi"
             scr.cls()
             scr.log(mode)
+            np.stopAnimation()
         else: mode = "weather"
     
     if mode == "weather":
@@ -69,8 +70,13 @@ while True:
             cptRefresh = 0
             scr.cls()
             scr.log("get weather")
+            earLeft.forward(0.1)
+            earRight.backward(0.1)
+            np.stopAnimation()
             meteo_data = meteo.getWeatherData()
             np.setWeather(meteo.getWeatherTypeFromCode(meteo_data["next"]["weather_code"]))
+            earLeft.stop()
+            earRight.stop()
             scr.cls()
             scr.img(ics.img(meteo.getWeatherTypeFromCode(meteo_data["current"]["weather_code"])), 0, 0)
             scr.text(f"{meteo_data["current"]["temperature_2m"]}C", 70, 28)
