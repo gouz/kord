@@ -7,14 +7,23 @@ FILE_PATH = 'sd/config.txt'
 class MICROSD:
     def __init__(self):
         SPI_BUS = 1
-        SCK_PIN = 14
+        SCK_PIN = 10
         MOSI_PIN = 11
         MISO_PIN = 12
         CS_PIN = 13
 
         try:
             # Init SPI communication
-            spi = SPI(SPI_BUS,sck=Pin(SCK_PIN), mosi=Pin(MOSI_PIN), miso=Pin(MISO_PIN))
+            spi = SPI(SPI_BUS,
+                      sck=Pin(SCK_PIN),
+                      mosi=Pin(MOSI_PIN),
+                      miso=Pin(MISO_PIN),
+                      baudrate=1000000,
+                      polarity=0,
+                      phase=0,
+                      bits=8,
+                      firstbit=SPI.MSB
+                    )
             cs = Pin(CS_PIN)
             self.sd = sdcard.SDCard(spi, cs)
             

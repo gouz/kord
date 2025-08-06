@@ -7,11 +7,17 @@ import screen
 import taichi
 import button
 import icons
+import microsd
 
 ics = icons.ICONS()
 
 earLeft = servo.SERVO(pin=18)
 earRight = servo.SERVO(pin=22)
+
+sd = microsd.MICROSD()
+config = sd.getConfig()
+
+print(config)
 
 scr = screen.SCREEN(sda=16, scl=17)
 
@@ -26,7 +32,7 @@ np.setColor(2, lightPower, 0, 0)
 tai = taichi.TAICHI(np, earLeft, earRight, lightPower)
 
 scr.log("WiFi connection")
-wf = wifi.WIFI("bobox", "mon joli mot de passe")
+wf = wifi.WIFI(config["WIFI_SSID"], config["WIFI_PWD"])
 
 wf.connect()
 
@@ -49,7 +55,7 @@ np.setColor(0, 0, lightPower, 0)
 np.setColor(1, 0, lightPower, 0)
 np.setColor(2, 0, lightPower, 0)
 
-meteo = weather.WEATHER(latitude=45.7334, longitude=4.2275)
+meteo = weather.WEATHER(latitude=float(config["GPS_LATITUDE"]), longitude=float(config["GPS_LONGITUDE"]))
 
 mode = "weather"
 
