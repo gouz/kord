@@ -17,15 +17,11 @@ class MICROSD:
             spi = SPI(SPI_BUS,
                       sck=Pin(SCK_PIN),
                       mosi=Pin(MOSI_PIN),
-                      miso=Pin(MISO_PIN),
-                      baudrate=1000000,
-                      polarity=0,
-                      phase=0,
-                      bits=8,
-                      firstbit=SPI.MSB
+                      miso=Pin(MISO_PIN)
                     )
             cs = Pin(CS_PIN)
             self.sd = sdcard.SDCard(spi, cs)
+            os.mount(self.sd, SD_MOUNT_PATH)
             
         except Exception as e:
             print('An error occurred:', e)
@@ -33,7 +29,6 @@ class MICROSD:
     def getConfig(self):
         hash_map = {}
         try: 
-            os.mount(self.sd, SD_MOUNT_PATH)
             with open(FILE_PATH, "r") as file:
                 # read the file content
                 content = file.read()
@@ -42,8 +37,7 @@ class MICROSD:
                     if '=' in line: 
                         key, value = line.split('=', 1)
                         hash_map[key] = value
-            os.umount(SD_MOUNT_PATH)
-        
+            
         except Exception as e:
             print('An error occurred:', e)
         

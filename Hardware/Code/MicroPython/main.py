@@ -9,33 +9,29 @@ import button
 import icons
 import microsd
 
-ics = icons.ICONS()
-
-earLeft = servo.SERVO(pin=18)
-earRight = servo.SERVO(pin=22)
+scr = screen.SCREEN(sda=16, scl=17)
+scr.log("init")
 
 sd = microsd.MICROSD()
 config = sd.getConfig()
+if config == {}:
+    scr.log("error read sd")
+else:
+    scr.log("config ok")
 
-print(config)
-
-scr = screen.SCREEN(sda=16, scl=17)
-
+ics = icons.ICONS()
+earLeft = servo.SERVO(pin=18)
+earRight = servo.SERVO(pin=22)
 myButton = button.BUTTON(pin=14)
-
 lightPower = 64
 np = neopix.NEOPIX(pin=20, lightPower=lightPower)
 np.setColor(0, lightPower, 0, 0)
 np.setColor(1, lightPower, 0, 0)
 np.setColor(2, lightPower, 0, 0)
-
 tai = taichi.TAICHI(np, earLeft, earRight, lightPower)
-
 scr.log("WiFi connection")
 wf = wifi.WIFI(config["WIFI_SSID"], config["WIFI_PWD"])
-
 wf.connect()
-
 while not wf.isconnected():
     if (wf.status() == 0):
         scr.log("wifi not enabled")
@@ -48,19 +44,13 @@ while not wf.isconnected():
     elif (wf.status() == 4):
         scr.log("failed")
     time.sleep(1)
-
 scr.log("connected")
-
 np.setColor(0, 0, lightPower, 0)
 np.setColor(1, 0, lightPower, 0)
 np.setColor(2, 0, lightPower, 0)
-
 meteo = weather.WEATHER(latitude=float(config["GPS_LATITUDE"]), longitude=float(config["GPS_LONGITUDE"]))
-
 mode = "weather"
-
 cptRefresh = 0
-
 while True:
     if myButton.isPressed():
         if mode == "weather": 
@@ -69,7 +59,6 @@ while True:
             scr.log(mode)
             np.stopAnimation()
         else: mode = "weather"
-    
     if mode == "weather":
         tai.stop()
         if cptRefresh == 300 or cptRefresh == 0:
