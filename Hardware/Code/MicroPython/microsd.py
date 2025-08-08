@@ -24,21 +24,16 @@ class MICROSD:
             os.mount(self.sd, SD_MOUNT_PATH)
             
         except Exception as e:
-            print('An error occurred:', e)
+            raise OSError(e)
 
     def getConfig(self):
         hash_map = {}
-        try: 
-            with open(FILE_PATH, "r") as file:
-                # read the file content
-                content = file.read()
-                lines = content.strip().split('\n')
-                for line in lines:
-                    if '=' in line: 
-                        key, value = line.split('=', 1)
-                        hash_map[key] = value
-            
-        except Exception as e:
-            print('An error occurred:', e)
-        
+        with open(FILE_PATH, "r") as file:
+            # read the file content
+            content = file.read()
+            lines = content.strip().split('\n')
+            for line in lines:
+                if '=' in line: 
+                    key, value = line.split('=', 1)
+                    hash_map[key] = value
         return hash_map
