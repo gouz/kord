@@ -35,6 +35,8 @@ else:
     np.setColor(0, lightPower, 0, 0)
     np.setColor(1, lightPower, 0, 0)
     np.setColor(2, lightPower, 0, 0)
+    earLeft.forward(0.1)
+    earRight.backward(0.1)
     tai = taichi.TAICHI(np, earLeft, earRight, lightPower)
     scr.log("WiFi connection")
     wf = wifi.WIFI(config["WIFI_SSID"], config["WIFI_PWD"])
@@ -52,6 +54,8 @@ else:
             scr.log("failed")
         time.sleep(1)
     scr.log("connected")
+    earLeft.stop()
+    earRight.stop()
     np.setColor(0, 0, lightPower, 0)
     np.setColor(1, 0, lightPower, 0)
     np.setColor(2, 0, lightPower, 0)
@@ -68,20 +72,17 @@ else:
             else: mode = "weather"
         if mode == "weather":
             tai.stop()
-            if cptRefresh == 300 or cptRefresh == 0:
+            if cptRefresh == 900 or cptRefresh == 0: # open-meteo 15 min refresh
                 cptRefresh = 0
                 scr.cls()
                 scr.log("get weather")
-                earLeft.forward(0.1)
-                earRight.backward(0.1)
                 np.stopAnimation()
                 meteo_data = meteo.getWeatherData()
                 np.setWeather(meteo.getWeatherTypeFromCode(meteo_data["next"]["weather_code"]))
-                earLeft.stop()
-                earRight.stop()
                 scr.cls()
                 scr.img(ics.img(meteo.getWeatherTypeFromCode(meteo_data["current"]["weather_code"])), 0, 0)
                 scr.text(f"{meteo_data["current"]["temperature_2m"]}C", 70, 28)
+                scr.text(f"{meteo_data["current"]["time"].strip()[11:16]}", 84, 45)
                 scr.disp()
             cptRefresh = cptRefresh + 1
         elif mode == "taichi":
