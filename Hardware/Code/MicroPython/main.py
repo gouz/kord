@@ -18,6 +18,7 @@ try:
     sd = microsd.MICROSD()
 except Exception as e:
     scr.log(f'err: {e}')
+    print(e)
     sys.exit(1)
 
 config = {}
@@ -72,7 +73,7 @@ else:
             else: mode = "weather"
         if mode == "weather":
             tai.stop()
-            if cptRefresh == 900 or cptRefresh == 0: # open-meteo 15 min refresh
+            if cptRefresh >= 900 or cptRefresh == 0: # open-meteo 15 min refresh
                 cptRefresh = 0
                 scr.cls()
                 scr.log("get weather")
