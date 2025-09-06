@@ -13,17 +13,21 @@ import sys
 scr = screen.SCREEN(sda=16, scl=17)
 scr.log("init")
 
-sd = None
-try:
-    sd = microsd.MICROSD()
-except Exception as e:
-    scr.log(f'err: {e}')
-    print(e)
-    sys.exit(1)
+# sd = None
+# try:
+#     sd = microsd.MICROSD()
+# except Exception as e:
+#     scr.log(f'err: {e}')
+#     sys.exit(1)
 
-config = {}
-if sd != None:
-    config = sd.getConfig()
+config = {
+    'WIFI_SSID': 'bobox',
+    'WIFI_PWD' : 'mon joli mot de passe',
+    'GPS_LATITUDE' : '45.7334',
+    'GPS_LONGITUDE' : '4.2275'
+}
+# if sd != None:
+#     config = sd.getConfig()
 if config == {}:
     scr.log("error read sd")
 else:
@@ -62,6 +66,7 @@ else:
     np.setColor(2, 0, lightPower, 0)
     meteo = weather.WEATHER(latitude=float(config["GPS_LATITUDE"]), longitude=float(config["GPS_LONGITUDE"]))
     mode = "weather"
+    wthr = "clear"
     cptRefresh = 0
     while True:
         if myButton.isPressed():
@@ -69,7 +74,6 @@ else:
                 mode = "taichi"
                 scr.cls()
                 scr.log(mode)
-                np.stopAnimation()
             else: mode = "weather"
         if mode == "weather":
             tai.stop()
@@ -77,14 +81,14 @@ else:
                 cptRefresh = 0
                 scr.cls()
                 scr.log("get weather")
-                np.stopAnimation()
                 meteo_data = meteo.getWeatherData()
-                np.setWeather(meteo.getWeatherTypeFromCode(meteo_data["next"]["weather_code"]))
+                wthr = meteo.getWeatherTypeFromCode(meteo_data["next"]["weather_code"])
                 scr.cls()
-                scr.img(ics.img(meteo.getWeatherTypeFromCode(meteo_data["current"]["weather_code"])), 0, 0)
+                scr.img(ics.img(wthr), 0, 0)
                 scr.text(f"{meteo_data["current"]["temperature_2m"]}C", 70, 28)
                 scr.text(f"{meteo_data["current"]["time"].strip()[11:16]}", 84, 45)
                 scr.disp()
+            np.setWeather(wthr)
             cptRefresh = cptRefresh + 1
         elif mode == "taichi":
             cptRefresh = 0
