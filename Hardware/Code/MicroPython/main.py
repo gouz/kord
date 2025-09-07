@@ -13,21 +13,17 @@ import sys
 scr = screen.SCREEN(sda=16, scl=17)
 scr.log("init")
 
-# sd = None
-# try:
-#     sd = microsd.MICROSD()
-# except Exception as e:
-#     scr.log(f'err: {e}')
-#     sys.exit(1)
+sd = None
+try:
+    sd = microsd.MICROSD()
+except Exception as e:
+    scr.log(f'err: {e}')
+    sys.exit(1)
 
-config = {
-    'WIFI_SSID': 'bobox',
-    'WIFI_PWD' : 'mon joli mot de passe',
-    'GPS_LATITUDE' : '45.7334',
-    'GPS_LONGITUDE' : '4.2275'
-}
-# if sd != None:
-#     config = sd.getConfig()
+config = {}
+
+if sd != None:
+    config = sd.getConfig()
 if config == {}:
     scr.log("error read sd")
 else:
@@ -70,7 +66,7 @@ else:
     cptRefresh = 0
     while True:
         if myButton.isPressed():
-            if mode == "weather": 
+            if mode == "weather":
                 mode = "taichi"
                 scr.cls()
                 scr.log(mode)
